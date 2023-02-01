@@ -27,7 +27,7 @@ public class Controller {
 
         for(int w = 0; w < gridLength; w++){
             for (int h = 0; h < gridLength; h++){
-                tempButton = new ButtonWrapper(((Integer)w).toString(), w, h, this);
+                tempButton = new ButtonWrapper(((Integer)w).toString(), w, h, this);        // so proud of this line and implementation
                 tempButton.b.setPrefWidth(tileWidth);    tempButton.b.setPrefHeight(tileWidth);
                 buttonGrid.insert(tempButton, w, h);        // event is initialised in here
                 layout.add(tempButton.b, w, h, 1, 1);
@@ -37,5 +37,6 @@ public class Controller {
 
     public void processTilePress(int x, int y){
         System.out.println("Tile in position ("+ ((Integer)x).toString()+","+((Integer)y).toString()+") pressed");
+        buttonGrid.get(x,y).b.setText("B");
     }
 }
