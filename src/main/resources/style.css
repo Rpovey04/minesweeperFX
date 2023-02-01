@@ -12,3 +12,7 @@
     -fx-text-fill: rgb(64,64,64);
 }
 
+.button:hover {
+    -fx-background-color: rgb(255,255,255);
+}
+

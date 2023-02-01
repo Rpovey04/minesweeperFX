@@ -21,7 +21,7 @@ public class Source extends Application {
         final int gridLength = 20;
         final int tileWidth = (20/gridLength)*20;
         Controller myController = fxmlLoader.getController();
-        myController.addButtons(layout, gridLength, tileWidth);
+        myController.initGrid(layout, gridLength, tileWidth);
 
         Scene scene = new Scene(layout, gridLength*tileWidth, gridLength*tileWidth + 100);
         stage.setTitle("Minesweeper!");

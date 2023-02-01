@@ -3,13 +3,18 @@ package mainmodule.minesweeperfx;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 
 public class Controller {
-    Grid buttonGrid;
-
+    Grid<ButtonWrapper> buttonGrid;        // grid containing buttons
+    Grid<Character> gameGrid;               // grid containing game logic / symbols
 
     public Controller(){
         System.out.println("Controller instantiated");
@@ -20,8 +25,8 @@ public class Controller {
 
     }
 
-    public void addButtons(GridPane layout, int gridLength, int tileWidth){
-        buttonGrid = new Grid(gridLength, gridLength);
+    public void initGrid(GridPane layout, int gridLength, int tileWidth){ // initialises all tiles as well as adding buttons
+        buttonGrid = new Grid<ButtonWrapper>(gridLength, gridLength);
         ButtonWrapper tempButton;
         EventHandler<ActionEvent> tempEvent;
 
@@ -35,8 +40,11 @@ public class Controller {
         }
     }
 
-    public void processTilePress(int x, int y){
+    public void processTilePress(int x, int y){ // refercing position in grid since "touching" values will need to be accessed
         System.out.println("Tile in position ("+ ((Integer)x).toString()+","+((Integer)y).toString()+") pressed");
-        buttonGrid.get(x,y).b.setText("B");
+
+        // These two commands will be used to
+        // buttonGrid.get(x,y).b.setText("B");
+        // buttonGrid.get(x,y).b.setStyle("-fx-background-color: rgb(255, 0, 0)");
     }
 }
