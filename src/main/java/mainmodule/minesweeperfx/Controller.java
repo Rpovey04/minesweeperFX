@@ -134,8 +134,6 @@ public class Controller {
     }
 
     public void processTilePress(int x, int y){ // refercing position in grid since "touching" values will need to be accessed
-        System.out.println("Tile in position ("+ ((Integer)x).toString()+","+((Integer)y).toString()+") pressed");
-
         // Set the style of the tile
         discoveredGrid.insert(true, x, y);
         buttonGrid.get(x,y).b.setStyle(getTileColor(gameGrid.get(x,y)));
@@ -146,6 +144,12 @@ public class Controller {
         if (gameGrid.get(x,y) == 0){
             showConnectedSafeSpaces(x, y);
         }
+    }
 
+    public void processFlagPlace(int x, int y){
+        if (!discoveredGrid.get(x,y)){
+            buttonGrid.get(x,y).b.setStyle("-fx-background-color: rgb(255, 255, 0)");   // yellow
+            buttonGrid.get(x,y).b.setText("F");
+        }
     }
 }
