@@ -1,0 +1,6 @@
+.root {
+    -fx-font-size: 9pt;
+    -fx-font-family: "Impact";
+    -fx-base: rgb(64, 64, 64);
+    -fx-background: rgb(128,128,128);
+}
