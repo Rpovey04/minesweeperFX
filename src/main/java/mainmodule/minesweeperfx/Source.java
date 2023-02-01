@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javafx.geometry.Pos;
 
@@ -17,16 +18,13 @@ public class Source extends Application {
         GridPane layout = fxmlLoader.load();
 
         // adding extra text field
-        TextField myTxtField = new TextField("txt from src");
-        myTxtField.setPrefHeight(100);
-        myTxtField.setPrefWidth(100);
-        myTxtField.setAlignment(Pos.CENTER);
-        layout.add(myTxtField, 3, 3, 1, 1);
+        final int gridLength = 20;
+        final int tileWidth = (20/gridLength)*20;
+        Controller myController = fxmlLoader.getController();
+        myController.addButtons(layout, gridLength, tileWidth);
 
-
-
-        Scene scene = new Scene(layout, 400, 400);
-        stage.setTitle("Hello!");
+        Scene scene = new Scene(layout, gridLength*tileWidth, gridLength*tileWidth + 100);
+        stage.setTitle("Minesweeper!");
         stage.setScene(scene);
         stage.show();
     }
