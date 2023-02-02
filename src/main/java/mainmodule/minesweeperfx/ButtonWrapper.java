@@ -10,6 +10,14 @@ import javafx.util.Pair;
 public class ButtonWrapper {
     public Button b;
     public int x, y;
+    String defaultColStyle;
+
+    public void resetStyle(){
+        // b.setText("");
+        b.setStyle(defaultColStyle);
+        b.setOnMouseEntered(e->b.setStyle("-fx-background-color: rgb(255,255,255)"));
+        b.setOnMouseExited(e->b.setStyle(defaultColStyle));
+    }
 
     public ButtonWrapper(){}
 
@@ -23,6 +31,11 @@ public class ButtonWrapper {
                 else {c.processFlagPlace(x,y);}
             }
         });
+    }
+
+    public void setColStyle(String s){
+        defaultColStyle = s;
+        b.setStyle(s);
     }
 
 }

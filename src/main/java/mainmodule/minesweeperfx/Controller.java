@@ -30,15 +30,15 @@ public class Controller {
             case(0):    // blank space
                 return "-fx-background-color: rgb(255, 255, 255)";
             case(1):
-                return "-fx-background-color: rgb(0, 0, 128)";
+                return "-fx-background-color: rgb(0, 0, 200)";
             case(2):
-                return "-fx-background-color: rgb(0, 128, 0)";
+                return "-fx-background-color: rgb(0, 200, 0)";
             case(3):
-                return "-fx-background-color: rgb(128, 0, 0)";
+                return "-fx-background-color: rgb(200, 0, 0)";
             case(4):
-                return "-fx-background-color: rgb(128, 128, 0)";
+                return "-fx-background-color: rgb(200, 200, 0)";
             default:
-                return "-fx-background-color: rgb(0, 128, 128)";
+                return "-fx-background-color: rgb(0, 200, 200)";
         }
     }
 
@@ -63,8 +63,7 @@ public class Controller {
     private void reset(){
         for (int i = 0; i < gridLength; i++){
             for (int j = 0; j < gridLength; j++){
-                buttonGrid.get(i, j).b.setStyle("-fx-background-color: rgb(155,155,155)");
-                buttonGrid.get(i, j).b.setText("");
+                buttonGrid.get(i, j).resetStyle();
             }
         }
         initGame();
@@ -192,7 +191,7 @@ public class Controller {
     public void processTilePress(int x, int y)  { // refercing position in grid since "touching" values will need to be accessed
         // Set the style of the tile
         discoveredGrid.set(true, x, y);
-        buttonGrid.get(x,y).b.setStyle(getTileColor(gameGrid.get(x,y)));
+        buttonGrid.get(x,y).setColStyle(getTileColor(gameGrid.get(x,y)));
         if (gameGrid.get(x,y) == -1) { buttonGrid.get(x,y).b.setText("B");}
         else {buttonGrid.get(x,y).b.setText(gameGrid.get(x,y).toString());}
 
@@ -207,8 +206,8 @@ public class Controller {
 
     public void processFlagPlace(int x, int y){
         if (!discoveredGrid.get(x,y)){
-            if (!flagGrid.get(x,y)) {   // placing flag
-                buttonGrid.get(x, y).b.setStyle("-fx-background-color: rgb(255, 255, 0)");   // yellow
+            if (!flagGrid.get(x,y) && numFlags > 0) {   // placing flag
+                buttonGrid.get(x, y).setColStyle("-fx-background-color: rgb(255, 255, 0)");   // yellow
                 buttonGrid.get(x, y).b.setText("F");
                 flagGrid.set(true, x,y);
 
@@ -217,7 +216,7 @@ public class Controller {
                 checkWin();
             }
             else {      // removing the flag
-                buttonGrid.get(x, y).b.setStyle("-fx-background-color: rgb(155,155,155)");
+                buttonGrid.get(x, y).setColStyle("-fx-background-color: rgb(155,155,155)");
                 buttonGrid.get(x, y).b.setText("");
                 flagGrid.set(false, x,y);
 
