@@ -16,15 +16,6 @@ public class ButtonWrapper {
     public ButtonWrapper(String txt, int x, int y, Controller c){       // initialises event
         b = new Button(txt);
         this.x = x; this.y = y;
-
-        /*
-        b.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {   // allows for interaction with corresponding "cell" from controller
-                c.processTilePress(x,y);
-            }
-        });
-        */
         b.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {

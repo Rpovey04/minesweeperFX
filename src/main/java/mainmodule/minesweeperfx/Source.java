@@ -18,10 +18,10 @@ public class Source extends Application {
         GridPane layout = fxmlLoader.load();
 
         // adding extra text field
-        final int gridLength = 20;
+        final int gridLength = 15;
         final int tileWidth = (20/gridLength)*20;
         Controller myController = fxmlLoader.getController();
-        myController.initButtons(layout, gridLength, tileWidth);
+        myController.init(layout, gridLength, tileWidth);
 
         Scene scene = new Scene(layout, gridLength*tileWidth, gridLength*tileWidth + 100);
         stage.setTitle("Minesweeper!");

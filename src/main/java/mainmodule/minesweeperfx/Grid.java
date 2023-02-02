@@ -10,7 +10,7 @@ public class Grid<T> {
         arr = (T[]) new Object[r*c];
         rows=r; cols=c;
     }
-    public void insert(T element, int r, int c){
+    public void set(T element, int r, int c){
         arr[r + c*rows] = element;
     }
     public T get(int r, int c){

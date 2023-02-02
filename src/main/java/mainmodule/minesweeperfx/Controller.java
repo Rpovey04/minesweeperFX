@@ -17,24 +17,81 @@ public class Controller {
     private Grid<ButtonWrapper> buttonGrid;        // grid containing buttons
     private Grid<Integer> gameGrid;               // grid containing game logic / symbols
     private Grid<Boolean> discoveredGrid;           // used for game logic
+    private Grid<Boolean> flagGrid;
     private int gridLength;
     private Random rand;
+    private int numBombs, numFlags, score;
 
+
+    private String getTileColor(int val){
+        switch(val){
+            case(-1): // bomb
+                return "-fx-background-color: rgb(255, 0, 0)";
+            case(0):    // blank space
+                return "-fx-background-color: rgb(255, 255, 255)";
+            case(1):
+                return "-fx-background-color: rgb(0, 0, 128)";
+            case(2):
+                return "-fx-background-color: rgb(0, 128, 0)";
+            case(3):
+                return "-fx-background-color: rgb(128, 0, 0)";
+            case(4):
+                return "-fx-background-color: rgb(128, 128, 0)";
+            default:
+                return "-fx-background-color: rgb(0, 128, 128)";
+        }
+    }
+
+    private void clearFirstTiles(){
+        // selecting a blank tile to start the game
+        boolean found = false;
+        int randX, randY;
+        while (!found){
+            randX = rand.nextInt(gridLength);
+            randY = rand.nextInt(gridLength);
+            if (gameGrid.get(randX, randY) == 0){
+                found = true;
+                processTilePress(randX, randY);
+            }
+        }
+    }
+
+    private int getNumBombs(){
+        return (gridLength*gridLength)/10;      // approx 1/10 tiles are bombs
+    }
+
+    private void reset(){
+        for (int i = 0; i < gridLength; i++){
+            for (int j = 0; j < gridLength; j++){
+                buttonGrid.get(i, j).b.setStyle("-fx-background-color: rgb(155,155,155)");
+                buttonGrid.get(i, j).b.setText("");
+            }
+        }
+        initGame();
+        clearFirstTiles();
+    }
     private void initGame(){
+        // empty grids
         gameGrid = new Grid<>(gridLength, gridLength);
-        for (int i = 0; i < gridLength; i++){for (int j = 0; j < gridLength; j++) {gameGrid.insert(0,i,j);}}
+        for (int i = 0; i < gridLength; i++){for (int j = 0; j < gridLength; j++) {gameGrid.set(0,i,j);}}
         discoveredGrid = new Grid<>(gridLength, gridLength);
-        for (int i = 0; i < gridLength; i++){for (int j = 0; j < gridLength; j++) {discoveredGrid.insert(false,i,j);}}
+        for (int i = 0; i < gridLength; i++){for (int j = 0; j < gridLength; j++) {discoveredGrid.set(false,i,j);}}
+        flagGrid = new Grid<>(gridLength, gridLength);
+        for (int i = 0; i < gridLength; i++){for (int j = 0; j < gridLength; j++) {flagGrid.set(false,i,j);}}
 
+        // game variables
+        numBombs = getNumBombs();
+        numFlags = numBombs;
+        score = 0;
 
         // placing bombs
         int count = 0;
         int randX,randY;
-        while (count < gridLength*2){
+        while (count < numBombs){
             randX = rand.nextInt(gridLength);
             randY = rand.nextInt(gridLength);
             if (gameGrid.get(randX, randY) != -1) {
-                gameGrid.insert(-1, randX, randY);
+                gameGrid.set(-1, randX, randY);
                 count+=1;
             }
         }
@@ -61,11 +118,29 @@ public class Controller {
                     if (y > 0) {if(gameGrid.get(x,y-1)==-1){currentCount+=1;}}
                     //topleft
                     if (x > 0 && y > 0) {if(gameGrid.get(x-1,y-1)==-1){currentCount+=1;}}
-                    gameGrid.insert(currentCount,x,y);
+                    gameGrid.set(currentCount,x,y);
                 }
             }
         }
     }
+
+    private void initButtons(GridPane layout, int tileWidth){ // initialises all tiles as well as adding buttons
+        buttonGrid = new Grid<>(gridLength, gridLength);
+        ButtonWrapper tempButton;
+
+        for(int w = 0; w < gridLength; w++){
+            for (int h = 0; h < gridLength; h++){
+                tempButton = new ButtonWrapper("", w, h, this);        // so proud of this line and implementation
+                tempButton.b.setPrefWidth(tileWidth);    tempButton.b.setPrefHeight(tileWidth);
+                buttonGrid.set(tempButton, w, h);        // event is initialised in here
+                layout.add(tempButton.b, w, h, 1, 1);
+            }
+        }
+    }
+
+    /*
+        CONSTRUCTORS
+    */
     public Controller(){
         rand = new Random();
     }
@@ -74,55 +149,17 @@ public class Controller {
     public void initialize(){   // this method is called after fxml attributes are uploaded and given to the class
     }
 
-    public void initButtons(GridPane layout, int gridLength, int tileWidth){ // initialises all tiles as well as adding buttons
+    public void init(GridPane layout, int gridLength, int tileWidth){
         this.gridLength = gridLength;
         initGame();
-
-        buttonGrid = new Grid<>(gridLength, gridLength);
-        ButtonWrapper tempButton;
-
-        for(int w = 0; w < gridLength; w++){
-            for (int h = 0; h < gridLength; h++){
-                tempButton = new ButtonWrapper("", w, h, this);        // so proud of this line and implementation
-                tempButton.b.setPrefWidth(tileWidth);    tempButton.b.setPrefHeight(tileWidth);
-                buttonGrid.insert(tempButton, w, h);        // event is initialised in here
-                layout.add(tempButton.b, w, h, 1, 1);
-            }
-        }
-
-        // selecting a blank tile to start the game
-        boolean found = false;
-        int randX, randY;
-        while (!found){
-            randX = rand.nextInt(gridLength);
-            randY = rand.nextInt(gridLength);
-            if (gameGrid.get(randX, randY) == 0){
-                found = true;
-                processTilePress(randX, randY);
-            }
-        }
+        initButtons(layout, tileWidth);
+        clearFirstTiles();
     }
 
-    // Game updates on click
-    private String getTileColor(int val){
-        switch(val){
-            case(-1): // bomb
-                return "-fx-background-color: rgb(255, 0, 0)";
-            case(0):    // blank space
-                return "-fx-background-color: rgb(255, 255, 255)";
-            case(1):
-                return "-fx-background-color: rgb(0, 0, 128)";
-            case(2):
-                return "-fx-background-color: rgb(0, 128, 0)";
-            case(3):
-                return "-fx-background-color: rgb(128, 0, 0)";
-            case(4):
-                return "-fx-background-color: rgb(128, 128, 0)";
-            default:
-                return "-fx-background-color: rgb(0, 128, 128)";
-        }
-    }
-
+    /*
+        GAME LOGIC
+     */
+    // Game logic
     private void showConnectedSafeSpaces(int x, int y){
         if (x > 0){if (!discoveredGrid.get(x-1,y)) {processTilePress(x-1,y);}}
         //bottom
@@ -133,9 +170,28 @@ public class Controller {
         if (y > 0) {if (!discoveredGrid.get(x,y-1)){processTilePress(x,y-1);}}
     }
 
-    public void processTilePress(int x, int y){ // refercing position in grid since "touching" values will need to be accessed
+    private void checkWin(){
+       if (score==numBombs){win();}
+    }
+
+    // endgames (will be updated to work with scoreboard ect)
+    private void win(){
+        System.out.println("Congrats!");
+        try { Thread.sleep(3000);
+        } catch (InterruptedException e){}
+        reset();
+    }
+    private void lose(){
+        System.out.println("BANG!");
+        try { Thread.sleep(3000);
+        } catch (InterruptedException e){}
+        reset();
+    }
+
+    // Input
+    public void processTilePress(int x, int y)  { // refercing position in grid since "touching" values will need to be accessed
         // Set the style of the tile
-        discoveredGrid.insert(true, x, y);
+        discoveredGrid.set(true, x, y);
         buttonGrid.get(x,y).b.setStyle(getTileColor(gameGrid.get(x,y)));
         if (gameGrid.get(x,y) == -1) { buttonGrid.get(x,y).b.setText("B");}
         else {buttonGrid.get(x,y).b.setText(gameGrid.get(x,y).toString());}
@@ -144,12 +200,30 @@ public class Controller {
         if (gameGrid.get(x,y) == 0){
             showConnectedSafeSpaces(x, y);
         }
+        else if (gameGrid.get(x,y) == -1){   // touched bomb
+            lose();
+        }
     }
 
     public void processFlagPlace(int x, int y){
         if (!discoveredGrid.get(x,y)){
-            buttonGrid.get(x,y).b.setStyle("-fx-background-color: rgb(255, 255, 0)");   // yellow
-            buttonGrid.get(x,y).b.setText("F");
+            if (!flagGrid.get(x,y)) {   // placing flag
+                buttonGrid.get(x, y).b.setStyle("-fx-background-color: rgb(255, 255, 0)");   // yellow
+                buttonGrid.get(x, y).b.setText("F");
+                flagGrid.set(true, x,y);
+
+                numFlags-=1;
+                if (gameGrid.get(x,y) == -1){score+=1;}
+                checkWin();
+            }
+            else {      // removing the flag
+                buttonGrid.get(x, y).b.setStyle("-fx-background-color: rgb(155,155,155)");
+                buttonGrid.get(x, y).b.setText("");
+                flagGrid.set(false, x,y);
+
+                numFlags+=1;
+                if (gameGrid.get(x,y) == -1){score-=1;}
+            }
         }
     }
 }
