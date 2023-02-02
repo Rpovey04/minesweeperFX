@@ -12,7 +12,9 @@ import javafx.geometry.Pos;
 import java.io.IOException;
 
 public class Source extends Application {
-    private Ticker t = new Ticker();;
+    // thread to track time passed
+    Ticker t;
+    Thread clockThread;
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Source.class.getResource("View.fxml"));
@@ -20,7 +22,7 @@ public class Source extends Application {
 
 
         // adding extra text field
-        final int gridLength = 8;
+        final int gridLength = 10;
         final int tileWidth = (20/gridLength)*20;
         Controller myController = fxmlLoader.getController();
         myController.init(layout, gridLength, tileWidth);
@@ -30,17 +32,23 @@ public class Source extends Application {
         stage.setScene(scene);
         stage.show();
 
-        t.run(myController);
+        t = new Ticker(myController);
+        clockThread =  new Thread(t);
+        clockThread.start();
     }
 
-    private class Ticker extends Thread {
-        public void run(Controller c){
-            try { Thread.sleep(5000);
-            } catch (InterruptedException e){}
+    private class Ticker implements Runnable {
+        Controller c;
+        public void run() {
+            while (true){
+                try { Thread.sleep(1000);
+                } catch (InterruptedException e){}
+                c.tick();
+            }
         }
-        public Ticker()
-        {}
+        public Ticker(Controller c){this.c = c;}
     }
+
 
     public void mainStart(){
         launch();
