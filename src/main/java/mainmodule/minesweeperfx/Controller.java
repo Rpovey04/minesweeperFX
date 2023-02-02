@@ -202,6 +202,10 @@ public class Controller {
         else if (gameGrid.get(x,y) == -1){   // touched bomb
             lose();
         }
+
+        if (flagGrid.get(x, y)) {
+            numFlags += 1;
+        }
     }
 
     public void processFlagPlace(int x, int y){

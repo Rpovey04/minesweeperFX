@@ -13,9 +13,10 @@ public class ButtonWrapper {
     String defaultColStyle;
 
     public void resetStyle(){
-        // b.setText("");
+        b.setText("");
+        defaultColStyle = "-fx-background: rgb(128,128,128)";
         b.setStyle(defaultColStyle);
-        b.setOnMouseEntered(e->b.setStyle("-fx-background-color: rgb(255,255,255)"));
+        b.setOnMouseEntered(e->b.setStyle("-fx-background-color: rgb(200,200,200)"));
         b.setOnMouseExited(e->b.setStyle(defaultColStyle));
     }
 
@@ -23,6 +24,12 @@ public class ButtonWrapper {
 
     public ButtonWrapper(String txt, int x, int y, Controller c){       // initialises event
         b = new Button(txt);
+
+        defaultColStyle = "-fx-background: rgb(128,128,128)";
+        b.setStyle(defaultColStyle);
+        b.setOnMouseEntered(e->b.setStyle("-fx-background-color: rgb(200,200,200)"));
+        b.setOnMouseExited(e->b.setStyle(defaultColStyle));
+
         this.x = x; this.y = y;
         b.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
