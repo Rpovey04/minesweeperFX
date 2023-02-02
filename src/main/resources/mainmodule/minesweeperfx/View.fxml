@@ -5,6 +5,17 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Label?>
 
-<GridPane fx:controller="mainmodule.minesweeperfx.Controller" xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT"
-          hgap="0" vgap="0" gridLinesVisible="true" stylesheets="style.css">
+<GridPane id="gridPane" fx:controller="mainmodule.minesweeperfx.Controller" xmlns:fx="http://javafx.com/fxml" alignment="TOP_LEFT"
+          hgap="0" vgap="0" gridLinesVisible="false" stylesheets="style.css">
+        <Button fx:id = "reset_button" onAction = "#onButtonClicked"
+                GridPane.columnIndex="0" GridPane.rowIndex = "500" GridPane.columnSpan = "1"
+                GridPane.rowSpan = "1" text = "RESET"
+        />
+        <TextField fx:id = "flag_num"
+                   text = "flags: " GridPane.columnIndex="0" GridPane.rowIndex = "501" GridPane.columnSpan = "2" GridPane.rowSpan = "1"
+        />
+        <TextField id = "timeField" fx:id = "time_passed"
+                   text = "Time: " GridPane.columnIndex="0" GridPane.rowIndex = "502" GridPane.columnSpan="3" GridPane.rowSpan = "1"
+        />
+
 </GridPane>

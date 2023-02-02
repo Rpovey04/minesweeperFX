@@ -1,8 +1,30 @@
+#gridPane {
+    -fx-background-image: url("backdrop.png");
+        -fx-background-repeat: stretch;
+        -fx-background-size: 320 340;
+        -fx-background-position: bottom center;
+}
+
+#timeField{
+    -fx-font-size: 9pt;
+    -fx-background-color: rgb(155,155,155);
+    -fx-border-color: rgb(64,64,64);
+    -fx-text-fill: rgb(64,64,64);
+}
+
+.text-field {
+    -fx-font-size: 9pt;
+    -fx-background-color: rgb(155,155,155);
+    -fx-border-color: rgb(64,64,64);
+    -fx-text-fill: rgb(255,255,0);
+}
+
+
 .root {
     -fx-font-size: 9pt;
     -fx-font-family: "Impact";
     -fx-base: rgb(64, 64, 64);
-    -fx-background: rgb(128,128,128);
+    -fx-background: rgb(0,184,0);
 }
 
 .button {

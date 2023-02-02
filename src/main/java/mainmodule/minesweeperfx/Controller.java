@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -20,7 +21,7 @@ public class Controller {
     private Grid<Boolean> flagGrid;
     private int gridLength;
     private Random rand;
-    private int numBombs, numFlags, score;
+    private int numBombs, numFlags, score, timePassed;
 
 
     private String getTileColor(int val){
@@ -61,6 +62,7 @@ public class Controller {
     }
 
     private void reset(){
+        timePassed = 0;
         for (int i = 0; i < gridLength; i++){
             for (int j = 0; j < gridLength; j++){
                 buttonGrid.get(i, j).resetStyle();
@@ -68,6 +70,7 @@ public class Controller {
         }
         initGame();
         clearFirstTiles();
+        updateTextFields();
     }
     private void initGame(){
         // empty grids
@@ -144,8 +147,11 @@ public class Controller {
         rand = new Random();
     }
 
-    @FXML
-    public void initialize(){   // this method is called after fxml attributes are uploaded and given to the class
+    @FXML private Button reset_button;
+    @FXML private TextField flag_num;
+    @FXML private TextField time_passed;
+    @FXML public void initialize(){   // this method is called after fxml attributes are uploaded and given to the class
+        reset_button.setOnAction(e->reset());       // using the variable intialised from the FXML file
     }
 
     public void init(GridPane layout, int gridLength, int tileWidth){
@@ -153,6 +159,7 @@ public class Controller {
         initGame();
         initButtons(layout, tileWidth);
         clearFirstTiles();
+        updateTextFields();
     }
 
     /*
@@ -187,7 +194,23 @@ public class Controller {
         reset();
     }
 
-    // Input
+    // FXML interface
+    @FXML
+    private void onButtonClicked(ActionEvent e)
+    {}
+
+    private void updateFlagNum(){
+        flag_num.setText("flags: " + ((Integer)numFlags).toString());
+    }
+    private void updateTimePassed() {time_passed.setText("Time: " + ((Integer)timePassed).toString());}
+    private void updateTextFields(){
+        updateFlagNum();
+
+    }    // Input
+    public void tick(){     // called every second
+        timePassed += 1;
+        updateTimePassed();
+    }
     public void processTilePress(int x, int y)  { // refercing position in grid since "touching" values will need to be accessed
         // Set the style of the tile
         discoveredGrid.set(true, x, y);
@@ -228,5 +251,6 @@ public class Controller {
                 if (gameGrid.get(x,y) == -1){score-=1;}
             }
         }
+        updateTextFields();
     }
 }
