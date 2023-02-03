@@ -1,7 +1,5 @@
 package mainmodule.minesweeperfx;
 
-import javafx.util.Pair;
-
 public class Grid<T> {
     int rows, cols;
     private T[] arr;

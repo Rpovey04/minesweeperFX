@@ -12,7 +12,10 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+
+import java.util.ArrayList;
 import java.util.Random;
+import java.util.function.Function;
 
 public class Controller {
     private Grid<ButtonWrapper> buttonGrid;        // grid containing buttons
@@ -22,6 +25,8 @@ public class Controller {
     private int gridLength;
     private Random rand;
     private int numBombs, numFlags, score, timePassed;
+    private boolean isReset = false;
+    private Thread[] threadToClose;
 
 
     private String getTileColor(int val){
@@ -62,6 +67,7 @@ public class Controller {
     }
 
     private void reset(){
+        isReset = true;
         timePassed = 0;
         for (int i = 0; i < gridLength; i++){
             for (int j = 0; j < gridLength; j++){
@@ -163,6 +169,18 @@ public class Controller {
     }
 
     /*
+        SHUTDOWN
+     */
+    public void setThreadsToClose(Thread[] arr){
+        threadToClose = arr;
+    }
+    public void windowClose(){
+        System.out.println("Closing window");
+        for (Thread t : threadToClose){
+            t.stop();
+        }
+    }
+    /*
         GAME LOGIC
      */
     // Game logic
@@ -211,6 +229,8 @@ public class Controller {
         timePassed += 1;
         updateTimePassed();
     }
+
+    // Input
     public void processTilePress(int x, int y)  { // refercing position in grid since "touching" values will need to be accessed
         // Set the style of the tile
         discoveredGrid.set(true, x, y);
@@ -252,5 +272,28 @@ public class Controller {
             }
         }
         updateTextFields();
+    }
+
+    /*
+        AI INTERFACE
+    */
+    public int getGridLength(){return gridLength;}
+    public int getKnownState(int x, int y){
+        if (discoveredGrid.get(x, y)){
+            return gameGrid.get(x, y);
+        }
+        else if (flagGrid.get(x, y)){
+            return -3;      // flag integer
+        }
+        else {
+            return -2;
+        }
+    }
+    public boolean resetFlag(){     // works as a flipflop so will only return true once per game (used to reset AI)
+        if (isReset){
+            isReset = false;
+            return true;
+        }
+        return isReset;
     }
 }
