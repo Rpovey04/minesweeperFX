@@ -286,7 +286,7 @@ public class Controller {
     /*
         AI INTERFACE
     */
-    private void makeAIMove(){
+    private void makeAIMove(){      // had to be triggered by a button otherwise this would make the program run in a main loop which is aims to avoid
         System.out.println("Making AI move");
         mineSolver.Move currentMove = AI.getMove();
         if (currentMove.leftClick){
