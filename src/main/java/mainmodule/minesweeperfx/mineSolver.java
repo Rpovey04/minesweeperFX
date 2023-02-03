@@ -61,12 +61,10 @@ public class mineSolver {
             System.out.println("reset detected");
             findEdgeTile();
         }
-        // decision for testing
-        Random rand = new Random();
-        while (game.getKnownState(currentX, currentY) != -2) {
-            currentX = rand.nextInt(game.getGridLength());
-            currentY = rand.nextInt(game.getGridLength());
-        }
+
+        // randomness removed, AI will be here tomorrow when I can be bothered to formulate it
+        // The algorithm will also be nice and neat
+
         return true;
     }
 
