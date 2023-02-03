@@ -1,7 +1,7 @@
 #gridPane {
     -fx-background-image: url("backdrop.png");
-        -fx-background-repeat: stretch;
-        -fx-background-size: 320 340;
+        -fx-background-repeat: REPEAT;
+        -fx-background-size: 320 180;
         -fx-background-position: bottom center;
 }
 

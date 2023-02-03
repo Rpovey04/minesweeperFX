@@ -22,7 +22,7 @@ public class Source extends Application {
 
 
         // adding extra text field
-        final int gridLength = 10;
+        final int gridLength = 15;
         final int tileWidth = (20/gridLength)*20;
         Controller myController = fxmlLoader.getController();
         myController.init(layout, gridLength, tileWidth);
