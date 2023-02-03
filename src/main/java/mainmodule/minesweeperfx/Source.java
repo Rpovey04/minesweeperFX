@@ -1,6 +1,7 @@
 package mainmodule.minesweeperfx;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
@@ -18,10 +19,7 @@ public class Source extends Application {
     // thread to track time passed
     Ticker t;
     Thread clockThread;
-    Thread[] threadList = new Thread[2];
-    // AI
-    mineSolver AI;
-    Thread AIThread;
+    Thread[] threadList = new Thread[1];
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -42,7 +40,6 @@ public class Source extends Application {
         stage.show();
 
         launchClock();
-        launchAI();
         myController.setThreadsToClose(threadList);
     }
 
@@ -64,14 +61,6 @@ public class Source extends Application {
         threadList[0] = clockThread;
         clockThread.start();
     }
-    // AI implement
-    private void launchAI(){
-        AI = new mineSolver(myController);
-        AIThread = new Thread(AI);
-        threadList[1] = AIThread;
-        AIThread.start();
-    }
-
     public void mainStart(){
         launch();
     }

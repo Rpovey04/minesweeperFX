@@ -1,5 +1,6 @@
 package mainmodule.minesweeperfx;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -27,6 +28,7 @@ public class Controller {
     private int numBombs, numFlags, score, timePassed;
     private boolean isReset = false;
     private Thread[] threadToClose;
+    private mineSolver AI = new mineSolver(this);
 
 
     private String getTileColor(int val){
@@ -156,8 +158,10 @@ public class Controller {
     @FXML private Button reset_button;
     @FXML private TextField flag_num;
     @FXML private TextField time_passed;
+    @FXML private Button AI_button;
     @FXML public void initialize(){   // this method is called after fxml attributes are uploaded and given to the class
         reset_button.setOnAction(e->reset());       // using the variable intialised from the FXML file
+        AI_button.setOnAction(e->makeAIMove());
     }
 
     public void init(GridPane layout, int gridLength, int tileWidth){
@@ -166,6 +170,7 @@ public class Controller {
         initButtons(layout, tileWidth);
         clearFirstTiles();
         updateTextFields();
+        AI.init();
     }
 
     /*
@@ -233,10 +238,14 @@ public class Controller {
     // Input
     public void processTilePress(int x, int y)  { // refercing position in grid since "touching" values will need to be accessed
         // Set the style of the tile
+        Platform.setImplicitExit(false);
         discoveredGrid.set(true, x, y);
-        buttonGrid.get(x,y).setColStyle(getTileColor(gameGrid.get(x,y)));
-        if (gameGrid.get(x,y) == -1) { buttonGrid.get(x,y).b.setText("B");}
-        else {buttonGrid.get(x,y).b.setText(gameGrid.get(x,y).toString());}
+        buttonGrid.get(x, y).setColStyle(getTileColor(gameGrid.get(x, y)));
+        if (gameGrid.get(x, y) == -1) {
+            buttonGrid.get(x, y).b.setText("B");
+        } else {
+            buttonGrid.get(x, y).b.setText(gameGrid.get(x, y).toString());
+        }
 
         // safe tile, reveal all connected tiles
         if (gameGrid.get(x,y) == 0){
@@ -277,6 +286,16 @@ public class Controller {
     /*
         AI INTERFACE
     */
+    private void makeAIMove(){
+        System.out.println("Making AI move");
+        mineSolver.Move currentMove = AI.getMove();
+        if (currentMove.leftClick){
+            processTilePress(currentMove.x, currentMove.y);
+        }
+        else {
+            processFlagPlace(currentMove.x, currentMove.y);
+        }
+    }
     public int getGridLength(){return gridLength;}
     public int getKnownState(int x, int y){
         if (discoveredGrid.get(x, y)){
@@ -296,4 +315,5 @@ public class Controller {
         }
         return isReset;
     }
+
 }

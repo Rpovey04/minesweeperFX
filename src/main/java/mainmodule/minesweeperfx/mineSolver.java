@@ -1,12 +1,22 @@
 package mainmodule.minesweeperfx;
 import javafx.util.Pair;
+import java.util.Random;
 
-
-public class mineSolver implements Runnable  {
+public class mineSolver {
     Controller game;
     int currentX, currentY;     // will be the last touched tile when makeMove is called
 
-    // orientation
+    // class being used to access from main thread. Actions on javaFX objects are not allowed in multithreading
+    public class Move {
+        public int x;
+        public int y;
+        public boolean leftClick;   // true for explore, false for flag
+        public Move(int x, int y, boolean leftClick){
+            this.x = x; this.y = y; this.leftClick = leftClick;
+        }
+    }
+
+    // orientation (agent / intelligence)
     private void findClearTile(){       // used for intial values since safe
         for (int i = 0; i < game.getGridLength(); i++){
             for (int j = 0; j < game.getGridLength(); j++){
@@ -44,44 +54,35 @@ public class mineSolver implements Runnable  {
         currentY = newCoords.getValue();
     }
 
-    // decision-making
+    // decision-making (intelligence)
     private boolean processNextMove(){     // true for left (explore) click and false for right (flag) click
         // check for reset
         if (game.resetFlag()){
             System.out.println("reset detected");
             findEdgeTile();
         }
-
+        // decision for testing
+        Random rand = new Random();
+        while (game.getKnownState(currentX, currentY) != -2) {
+            currentX = rand.nextInt(game.getGridLength());
+            currentY = rand.nextInt(game.getGridLength());
+        }
         return true;
     }
 
-    // constructor
+    // constructor (system)
     public mineSolver(Controller game) {
         this.game = game;
+    }
+    public void init(){
         findEdgeTile();
         System.out.println("AI initialised successfully");
     }
 
-    // interface with game
-    public void makeMove(){
+    // interface with game (agent)
+    public Move getMove(){
         boolean status = processNextMove();
-        if (status){        // left click
-            game.processTilePress(currentX, currentY);
-        }
-        else {              // right click
-            game.processFlagPlace(currentX, currentY);
-        }
-
         System.out.println("Currently at coordinate: (" + ((Integer)currentX).toString() + "," + ((Integer)currentY).toString() + ")");
-    }
-
-    // threading and main loop
-    public void run() {
-        System.out.println("AI starting");
-        while (true) {
-            try { Thread.sleep(1000);
-            } catch (InterruptedException e){}
-            makeMove();
-        }
+        return new Move(currentX, currentY, status);
     }
 }

@@ -11,6 +11,10 @@
                 GridPane.columnIndex="0" GridPane.rowIndex = "500" GridPane.columnSpan = "6"
                 GridPane.rowSpan = "1" text = "RESET"
         />
+        <Button fx:id = "AI_button" onAction = "#onButtonClicked"
+                GridPane.columnIndex="0" GridPane.rowIndex = "503" GridPane.columnSpan = "6"
+                GridPane.rowSpan = "1" text = "CPU MOVE"
+        />
         <TextField fx:id = "flag_num"
                    text = "flags: " GridPane.columnIndex="0" GridPane.rowIndex = "501" GridPane.columnSpan = "6" GridPane.rowSpan = "1"
         />
